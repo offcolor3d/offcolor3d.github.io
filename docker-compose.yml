@@ -1,0 +1,10 @@
+services:
+  web-astro:
+    build: .
+    ports:
+      - "8000:4321"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=production
