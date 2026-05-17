@@ -1,0 +1,28 @@
+---
+
+export interface Product{
+    id: number;
+    name: string;
+    description: string;
+    imagesUrl: string[];
+    material: string;
+    size: number[];
+    price: number;
+    category: string;
+    subcategory: string;
+}
+
+interface Props {
+    product: Product;
+}
+
+const { product } = Astro.props;
+
+---
+
+<article class="product-card">
+    <img src={product.imagesUrl[0]} alt={product.name} class="product-image"/>
+    <h2 class="product-name">{product.name}</h2>
+    <p class="product-description">{product.description}</p>
+    <p class="product-price">${product.price.toFixed(2)}</p>
+</article>

@@ -1,0 +1,50 @@
+---
+import ProductCard from "./ProductCard.astro";
+
+const {category, subcategory} = Astro.props;
+
+const API_URL = 'https://api-n3a3.onrender.com';
+
+let products = [];
+let errorMessage = '';
+
+try {
+    const response = await fetch(`${API_URL}/api/products?category=${category}&subcategory=${subcategory}`);
+
+    if(response.ok) {
+        products = await response.json();
+    } else {
+        errorMessage = `Error fetching products: ${response.status} ${response.statusText}`;
+    }
+}
+catch (error) {
+    if (error instanceof Error) {
+        errorMessage = `Network error: ${error.message}`;
+    } else {
+        errorMessage = 'An unknown network error occurred.';
+    }
+}
+---
+
+<div class="products-container">
+    {errorMessage && (
+        <div class="error-state">
+            <p>⚠ {errorMessage}</p>
+            <p>Intenta recargar la página en unos minutos.</p>
+        </div>
+    )}
+
+    {!errorMessage && products.length === 0 && (
+        <div class="empty-state">
+            <p>Actualmente no hay artículos disponibles en {category}/{subcategory}.</p>
+        </div>
+    )}
+
+    {!errorMessage && products.length > 0 && (
+        <div class="products-grid">
+            {products.map((prod: any) => (
+                <ProductCard product={prod}/>
+            ))}
+        </div>
+    )}
+</div>
