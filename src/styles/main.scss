@@ -1,0 +1,53 @@
+/* PROPIEDADES HTML BASE */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    color: white;
+}
+
+/* PROPIEDADES PERSONALIZADAS */
+
+//Productos
+//----------------------------------------------------------------------------------
+.products-container {
+    width: 100dvw;
+
+    .products-grid{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        width: 100%;
+    }
+}
+
+.product-card {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 20%;
+    border-style: solid;
+    border-color: white;
+    border-width: 2px;
+    border-radius: 8px;
+    height: 30vh;
+    text-align: center;
+    overflow: hidden;
+
+    img{
+        width: 100%;
+        max-height: 80%;
+        object-fit: cover;
+    }
+}
+
+// Carrito
+//----------------------------------------------------------------------------------
+#cart-container{
+    img{
+        max-width: 30dvw;
+        max-height: 30vh;
+    }
+}

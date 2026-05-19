@@ -14,18 +14,19 @@ export interface Product{
 
 interface Props {
     product: Product;
+    url: string;
 }
 
-const { product } = Astro.props;
+const { product, url } = Astro.props;
 
 ---
 
-<article class="product-card">
+<a href={url} class="product-card">
     <img src={`/media/products/${product.imagesUrl[0]}`} alt={product.title} class="product-image"/>
-    <h2 class="product-title">{product.title}</h2>
+    <!-- <h2 class="product-title">{product.title}</h2>
     <p class="product-description">{product.description}</p>
     <p class="product-material">Material: {product.material}</p>
     <p class="size">Dimensiones: {product.size.join("x")}cm</p>
-    <p class="product-price">${product.price.toFixed(2)}</p>
+    <p class="product-price">${product.price.toFixed(2)}</p> -->
     <button class="add-to-cart" data-product-id={product.id}>Agregar al carrito</button>
-</article>
+</a>
