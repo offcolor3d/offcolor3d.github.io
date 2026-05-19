@@ -27,4 +27,5 @@ const { product } = Astro.props;
     <p class="product-material">Material: {product.material}</p>
     <p class="size">Dimensiones: {product.size.join("x")}cm</p>
     <p class="product-price">${product.price.toFixed(2)}</p>
+    <button class="add-to-cart" data-product-id={product.id}>Agregar al carrito</button>
 </article>

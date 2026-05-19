@@ -1,0 +1,33 @@
+---
+
+const {title} = Astro.props;
+
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title} | OffColor</title>
+    <link rel="stylesheet" href="/styles/global.css">
+    <meta name="generator" content={Astro.generator} />
+</head>
+<body>
+    <header>
+        <h1>Off Color</h1>
+    </header>
+
+    <main>
+        <slot />
+    </main>
+
+    <footer>
+
+    </footer>
+
+    <script src="../scripts/cartManager.js"></script>
+</body>
+</html>
