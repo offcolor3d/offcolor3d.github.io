@@ -147,7 +147,7 @@ async function renderCart(){
             // Dibujamos el HTML mezclando los datos de la API (product) y del localStorage (localItem)
             const itemHTML = `
                 <div class="cart-item">
-                    <img src="${product.img || product.image}" alt="${product.id}" />
+                    <img src="/media/products/${product.imagesUrl[0]}" alt="${product.id}" />
                     <h3>${product.title}</h3>
                     <p>Precio: ${product.price}€</p>
                     
