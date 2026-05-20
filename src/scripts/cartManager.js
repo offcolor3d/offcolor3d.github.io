@@ -1,3 +1,48 @@
+/* OBTENCION DE DATOS DE LA API */
+
+import { ENDPOINTS } from "../config/api";
+
+//Obtiene los datos de un producto.
+async function getProduct(id){
+    try{
+        const response = await fetch(ENDPOINTS.products.getById(id));
+
+        if (!response.ok) throw new Error("Error al obtener el producto");
+            
+        const product = await response.json(); // Obtenemos el producto de la API
+
+        return product;
+    }
+    catch (error) {
+        console.error(`Error cargando el producto ${id}:`, error);
+    }
+}
+
+//Obtiene el precio total de todos los elementos del carrito.
+async function getTotalPrice(productList){
+    try {
+        //Mandamos los datos a la API.
+        const totalResponse = await fetch(ENDPOINTS.products.priceOf, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(productList)
+        });
+
+        //Si da error se manda el error a consola.
+        if (!totalResponse.ok) throw new Error("Error al calcular el total en el servidor");
+
+        //Obtiene el precio.
+        const totalPrice = await totalResponse.json();
+
+        return totalPrice;
+
+    } catch (error) {
+        console.error("Error al obtener el precio total:", error);
+    }
+}
+
 /* LOGICA GENERAL DE DATOS */
 
 let cartItems = [];
@@ -108,8 +153,50 @@ function updateCartNumber(){
     });
 }
 
+//Crea la lista de productos en el carrito.
+function createCartProductsList(){
+    return {
+        products: cartItems.map(item => ({
+            id: parseInt(item.productId, 10), 
+            quantity: item.quantity
+        }))
+    };
+}
+
 /* LOGICA DE RENDERIZADO */
 const cartContainer = document.getElementById('cart-container');
+
+//Renderiza el producto del carrito.
+function renderCartProduct(product, quantity, container){
+    // Dibujamos el HTML.
+    const html = `
+        <div class="cart-item">
+            <img src="/media/products/${product.imagesUrl[0]}" alt="${product.id}" />
+            <h3>${product.title}</h3>
+            <p>Precio: ${product.price}€</p>
+            
+            <div class="quantity-controls">
+                <button class="remove-from-cart" data-product-id="${product.id}">-</button>
+                <span>${quantity}</span>
+                <button class="add-to-cart" data-product-id="${product.id}">+</button>
+            </div>
+        </div>
+    `;
+
+    container.insertAdjacentHTML('beforeend', html);
+}
+
+//Renderiza el total del carrito.
+function renderCartTotalPrice(totalPrice, container){
+    const html = `
+        <div class="cart-total-summary">
+            <h2>Total de la compra:${totalPrice.toFixed(2)}€</h2>
+            <button class="btn-checkout">Pagar ahora</button>
+        </div>
+    `;
+
+    container.insertAdjacentHTML('beforeend', html);
+}
 
 //Renderiza el contenido del carrito en la pagina de carrito, mostrando los productos agregados y sus cantidades.
 async function renderCart(){
@@ -123,56 +210,24 @@ async function renderCart(){
         return;
     }
 
-    //Obtiene la URL de la api.
-    const API_URL = 'https://api-n3a3.onrender.com';
-
-    //Variable para calcular el precio total del carrito.
-    let totalPrice = 0;
-
     //Recorre todos los productos e intenta cargar sus datos desde la API para mostrarlos en el carrito.
     for (const localItem of cartItems) {
         
-        try {
-            //Cargamos los datos del producto desde la API usando el ID del localStorage
-            const response = await fetch(`${API_URL}/api/products/${localItem.productId}`);
-            
-            if (!response.ok) continue; // Si este producto da error en la API, saltamos al siguiente
-            
-            const product = await response.json(); // Obtenemos el producto de la API
+        const product = await getProduct(localItem.productId);
 
-            //Calcula el subtotal de este producto.
-            const itemSubtotal = product.price * localItem.quantity;
-            totalPrice += itemSubtotal; // Suma el subtotal al precio total del carrito
+        //Si el producto es nulo continua al siguiente.
+        if(!product) continue;
 
-            // Dibujamos el HTML mezclando los datos de la API (product) y del localStorage (localItem)
-            const itemHTML = `
-                <div class="cart-item">
-                    <img src="/media/products/${product.imagesUrl[0]}" alt="${product.id}" />
-                    <h3>${product.title}</h3>
-                    <p>Precio: ${product.price}€</p>
-                    
-                    <div class="quantity-controls">
-                        <button class="remove-from-cart" data-product-id="${product.id}">-</button>
-                        <span>${localItem.quantity}</span>
-                        <button class="add-to-cart" data-product-id="${product.id}">+</button>
-                    </div>
-                </div>
-            `;
-            cartContainer.insertAdjacentHTML('beforeend', itemHTML);
-
-        } catch (error) {
-            console.error(`Error cargando el producto ${localItem.productId}:`, error);
-        }
+        renderCartProduct(product, localItem.quantity, cartContainer);
     }
 
-    const totalHTML = `
-        <div class="cart-total-summary">
-            <h2>Total de la compra:${totalPrice.toFixed(2)}€</h2>
-            <button class="btn-checkout">Pagar ahora</button>
-        </div>
-    `;
+    //Dibuja el precio total.
+    const totalPrice = await getTotalPrice(createCartProductsList());
 
-    cartContainer.insertAdjacentHTML('beforeend', totalHTML);
+    if(totalPrice > 0){
+        renderCartTotalPrice(totalPrice, cartContainer);
+    }
+
 }
 
 /* INICIALIZACION */

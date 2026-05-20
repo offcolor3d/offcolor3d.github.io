@@ -21,12 +21,9 @@ const { product, url } = Astro.props;
 
 ---
 
-<a href={url} class="product-card">
-    <img src={`/media/products/${product.imagesUrl[0]}`} alt={product.title} class="product-image"/>
-    <!-- <h2 class="product-title">{product.title}</h2>
-    <p class="product-description">{product.description}</p>
-    <p class="product-material">Material: {product.material}</p>
-    <p class="size">Dimensiones: {product.size.join("x")}cm</p>
-    <p class="product-price">${product.price.toFixed(2)}</p> -->
+<article class="product-card">
+    <a href={url}>
+        <img src={`/media/products/${product.imagesUrl[0]}`} alt={product.title} class="product-image"/>
+    </a>
     <button class="add-to-cart" data-product-id={product.id}>Agregar al carrito</button>
-</a>
+</article>

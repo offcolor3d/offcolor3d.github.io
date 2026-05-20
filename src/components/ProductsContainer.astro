@@ -1,15 +1,15 @@
 ---
 import ProductCard from "./ProductCard.astro";
 
-const {category, subcategory} = Astro.props;
+import { ENDPOINTS } from "../config/api";
 
-const API_URL = 'https://api-n3a3.onrender.com';
+const {category, subcategory} = Astro.props;
 
 let products = [];
 let errorMessage = '';
 
 try {
-    const response = await fetch(`${API_URL}/api/products?category=${category}&subcategory=${subcategory}`);
+    const response = await fetch(`${ENDPOINTS.products.getAll}?category=${category}&subcategory=${subcategory}`);
 
     if(response.ok) {
         products = await response.json();
@@ -43,7 +43,7 @@ catch (error) {
     {!errorMessage && products.length > 0 && (
         <div class="products-grid">
             {products.map((prod: any) => (
-                <ProductCard product={prod}/>
+                <ProductCard product={prod} url={`/products/${prod.id}`}/>
             ))}
         </div>
     )}
