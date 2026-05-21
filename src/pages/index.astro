@@ -1,4 +1,5 @@
 ---
+import BigCart from "../components/BigCart.astro";
 import ProductsContainer from "../components/ProductsContainer.astro";
 import Layout from "../layouts/Layout.astro";
 
@@ -7,9 +8,9 @@ import Layout from "../layouts/Layout.astro";
 
 <Layout
 	title = "Inicio">
-	<h1>Carrito</h1>
-	<div id="cart-container"></div>
-
+	<BigCart/>
 	<h1>Productos</h1>
-	<ProductsContainer/>
+	<ProductsContainer
+	title="Todo"
+	/>
 </Layout>

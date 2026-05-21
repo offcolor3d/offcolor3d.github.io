@@ -164,18 +164,25 @@ function createCartProductsList(){
 }
 
 /* LOGICA DE RENDERIZADO */
-const cartContainer = document.getElementById('cart-container');
+const cartContainers = document.getElementsByClassName('cart');
 
 //Renderiza el producto del carrito.
 function renderCartProduct(product, quantity, container){
     // Dibujamos el HTML.
     const html = `
         <div class="cart-item">
-            <img src="/media/products/${product.imagesUrl[0]}" alt="${product.id}" />
-            <h3>${product.title}</h3>
-            <p>Precio: ${product.price}€</p>
+            <div class="image">
+                <img src="/media/products/${product.imagesUrl[0]}" alt="${product.id}" />
+            </div>
+
+            <div class="info">
+                <h3>Información</h3>
+                <p>Nombre: ${product.title}</p>
+                <p>Precio: ${product.price.toFixed(2)}€</p>
+            </div>
             
             <div class="quantity-controls">
+                <h3>Cantidad:</h3>
                 <button class="remove-from-cart" data-product-id="${product.id}">-</button>
                 <span>${quantity}</span>
                 <button class="add-to-cart" data-product-id="${product.id}">+</button>
@@ -186,48 +193,58 @@ function renderCartProduct(product, quantity, container){
     container.insertAdjacentHTML('beforeend', html);
 }
 
-//Renderiza el total del carrito.
-function renderCartTotalPrice(totalPrice, container){
-    const html = `
-        <div class="cart-total-summary">
-            <h2>Total de la compra:${totalPrice.toFixed(2)}€</h2>
-            <button class="btn-checkout">Pagar ahora</button>
-        </div>
-    `;
-
-    container.insertAdjacentHTML('beforeend', html);
-}
-
 //Renderiza el contenido del carrito en la pagina de carrito, mostrando los productos agregados y sus cantidades.
 async function renderCart(){
-    if (!cartContainer) return; 
 
-    cartContainer.innerHTML = ''; 
+    if(!cartContainers) return;
 
-    // Si el carrito esta vacio muestra el mensaje correspondiente.
-    if (cartItems.length === 0) {
-        cartContainer.innerHTML = '<p>Sin productos</p>';
-        return;
+    for (const container of cartContainers){
+
+        //Obtiene el contenedor de contenido.
+        const contentContainer = container.querySelector(".content");
+
+        //Si no hay elementos.
+        if(cartItems.length === 0){
+
+            //Elimina la clase con contenido y vacia el contenido del contenedor.
+            container.classList.remove("with-content");
+
+            if(contentContainer){
+                contentContainer.innerHTML = '';
+            }
+        }
+        //Si hay elementos.
+        else{
+
+            //Agrega la clase con contenido y crea el contenido del contenedor.
+            container.classList.add("with-content");
+
+            if(contentContainer){
+                contentContainer.innerHTML = '';
+                
+                //Recorre todos los productos e intenta cargar sus datos desde la API para mostrarlos en el carrito.
+                for (const localItem of cartItems) {
+                    
+                    const product = await getProduct(localItem.productId);
+
+                    //Si el producto es nulo continua al siguiente.
+                    if(!product) continue;
+
+                    renderCartProduct(product, localItem.quantity, contentContainer);
+                }
+            }
+        }
+
+        //Obtiene el precio total.
+        const totalPrice = await getTotalPrice(createCartProductsList());
+
+        //Dibuja el precio.
+        const priceValue = container.querySelector(".price-value");
+
+        if(priceValue){
+            priceValue.textContent = totalPrice.toFixed(2);
+        }
     }
-
-    //Recorre todos los productos e intenta cargar sus datos desde la API para mostrarlos en el carrito.
-    for (const localItem of cartItems) {
-        
-        const product = await getProduct(localItem.productId);
-
-        //Si el producto es nulo continua al siguiente.
-        if(!product) continue;
-
-        renderCartProduct(product, localItem.quantity, cartContainer);
-    }
-
-    //Dibuja el precio total.
-    const totalPrice = await getTotalPrice(createCartProductsList());
-
-    if(totalPrice > 0){
-        renderCartTotalPrice(totalPrice, cartContainer);
-    }
-
 }
 
 /* INICIALIZACION */

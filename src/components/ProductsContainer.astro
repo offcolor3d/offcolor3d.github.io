@@ -3,7 +3,7 @@ import ProductCard from "./ProductCard.astro";
 
 import { ENDPOINTS } from "../config/api";
 
-const {category, subcategory} = Astro.props;
+const {title, category, subcategory} = Astro.props;
 
 let products = [];
 let errorMessage = '';
@@ -27,6 +27,7 @@ catch (error) {
 ---
 
 <div class="products-container">
+    <h2>{title}</h2>
     {errorMessage && (
         <div class="error-state">
             <p>⚠ {errorMessage}</p>

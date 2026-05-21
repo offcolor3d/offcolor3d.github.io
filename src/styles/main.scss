@@ -1,4 +1,6 @@
-/* PROPIEDADES HTML BASE */
+//======================================================================
+// PROPIEDADES HTML BASE
+//======================================================================
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -7,16 +9,179 @@ body {
     color: white;
 }
 
-/* PROPIEDADES PERSONALIZADAS */
+//======================================================================
+// ELEMENTOS BASE (MIXINS)
+//======================================================================
+
+@mixin flex-x-start{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;    
+}
+
+@mixin flex-x-center{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;    
+}
+
+@mixin flex-x-center-reversed{
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: center; 
+}
+
+@mixin flex-x-end{
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+}
+
+//Muestra sombra en los textos.
+@mixin text-shadow{
+    text-shadow: black 2px 2px;
+}
+
+@mixin flex-y-start{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+}
+
+@mixin flex-y-start-reversed{
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin flex-y-center{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+}
+
+@mixin flex-y-center-reversed{
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin flex-y-end{
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+}
+
+@mixin flex-y-end-reversed{
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: end;
+    align-items: center;
+}
+
+//Muestra una seccion de fondo que no se mueve.
+@mixin sticky-background-section{
+    position: sticky;
+    top: 0;
+    height: 100lvh;
+    width: 100%;
+    z-index: -10;
+    overflow-x: hidden;
+}
+
+@mixin background-panel($background: black, $opacity: 0.75){
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: $background;
+    opacity: $opacity;
+}
+
+//Margen
+//----------------------------------------------------------------------
+@mixin margin-0{margin: 0;}
+
+@mixin margin-x-small{
+    margin-left: 10dvw;
+    margin-right: 10dvw;
+
+    @media (max-aspect-ratio: 16/9) {
+        margin-left: 5dvw;
+        margin-right: 5dvw;
+    }
+}
+
+//Establece la pagina centrada horizontalmente dejando bastante espacio 
+//hacia los lados en PC y poco en movil.
+@mixin margin-x-large{
+    margin-left: 20dvw;
+    margin-right: 20dvw;
+
+    @media (max-aspect-ratio: 16/9) {
+        margin-left: 5dvw;
+        margin-right: 5dvw;
+    }
+}
+
+//Textos
+//----------------------------------------------------------------------
+@mixin text-left { text-align: left; }
+@mixin text-center { text-align: center; }
+@mixin text-right { text-align: right; }
+@mixin uppercase { text-transform: uppercase; }
+@mixin lowercase { text-transform: lowercase; }
+@mixin huge-text { font-size: $huge; }
+@mixin big-text { font-size: $big; }
+@mixin mid-text { font-size: $mid; }
+@mixin small-text { font-size: $small; }
+@mixin tiny-text { font-size: $tiny; }
+@mixin huge-line { line-height: $huge; }
+@mixin big-line { line-height: $big; }
+@mixin mid-line { line-height: $mid; }
+@mixin small-line { line-height: $small; }
+@mixin tiny-line { line-height: $tiny; }
+@mixin bold-text { font-weight: bold; }
+@mixin italic-text { font-style: italic; }
+@mixin underline-text { text-decoration: underline; }
+
+@mixin hanging-indent($amount){
+    padding-left: $amount;
+    padding-right: $amount;
+    text-indent: -$amount;
+}
+
+//Secciones
+//----------------------------------------------------------------------
+@mixin section-base{position: relative;}
+
+//======================================================================
+// PROPIEDADES PERSONALIZADAS
+//======================================================================
+
+//Secciones
+//----------------------------------------------------------------------------------
+.base-section{
+    @include section-base();
+    @include margin-x-small();
+}
 
 //Productos
 //----------------------------------------------------------------------------------
 .products-container {
-    width: 100dvw;
+    @include section-base();
+    @include flex-y-center();
 
     .products-grid{
-        display: flex;
-        flex-direction: row;
+        @include flex-x-center();
         flex-wrap: wrap;
         gap: 20px;
         justify-content: center;
@@ -25,8 +190,8 @@ body {
 }
 
 .product-card {
-    display: flex;
-    flex-direction: column;
+    @include flex-y-center();
+    align-items: stretch;
     flex-basis: 20%;
     border-style: solid;
     border-color: white;
@@ -36,18 +201,97 @@ body {
     text-align: center;
     overflow: hidden;
 
+    .big-section{
+        height: 90%;
+    }
+
+    .small-section{
+        height: 10%;
+    }
+
     img{
         width: 100%;
-        max-height: 80%;
+        height: 100%;
         object-fit: cover;
+        object-position: center;
+        position: relative;
     }
 }
 
 // Carrito
 //----------------------------------------------------------------------------------
-#cart-container{
+.big-cart{
+    @include section-base();
+    @include flex-y-center();
+    align-items: stretch;
+    flex-direction: column;
+
     img{
-        max-width: 30dvw;
-        max-height: 30vh;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
     }
+
+    &.with-content{
+        .no-products{
+            display: none;
+            width: 0;
+            height: 0;
+        }
+
+        .content{
+            @include section-base();
+            @include flex-y-center();
+            align-items: stretch;
+            background-color: rgb(10, 10, 10);
+            gap: 10px;
+            padding: 10px;
+
+            .cart-item{
+                @include flex-x-center();
+                align-items: stretch;
+                overflow: hidden;
+                width: 100%;
+                height: 20vh;
+
+                .image{
+                    flex-basis: 30%;
+                }
+
+                .info{
+                    flex-basis: 30%;
+                }
+
+                .quantity-controls{
+                    flex-basis: 30%;
+                }
+            }
+        }
+
+        .price{
+            @include flex-y-center();
+            align-items: end;
+            border-top: 10px white solid;
+        }
+    }
+
+    &:not(.with-content){
+        .no-products{
+            display: block;
+        }
+
+        .content{
+            display: none;
+            width: 0;
+            height: 0;
+        }
+
+        .price{
+            display: none;
+            width: 0;
+            height: 0;
+        }
+    }
+
+    
 }
