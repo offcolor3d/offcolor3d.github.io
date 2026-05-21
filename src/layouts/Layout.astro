@@ -1,0 +1,37 @@
+---
+import Header from '../components/Header.astro';
+import '../styles/main.scss';
+
+const {title} = Astro.props;
+
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title} | OffColor</title>
+    <link rel="stylesheet" href="/styles/global.css">
+    <meta name="generator" content={Astro.generator} />
+</head>
+<body>
+    <header>
+        <Header/>
+    </header>
+
+    <main>
+        <div class="base-section">
+            <slot />
+        </div>
+    </main>
+
+    <footer>
+
+    </footer>
+
+    <script src="../scripts/cartManager.js"></script>
+</body>
+</html>
