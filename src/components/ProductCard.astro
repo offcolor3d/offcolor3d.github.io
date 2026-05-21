@@ -25,5 +25,5 @@ const { product, url } = Astro.props;
     <a href={url} class="big-section">
         <img src={`/media/products/${product.imagesUrl[0]}`} alt={product.title} class="product-image"/>
     </a>
-    <button class="add-to-cart small-section" data-product-id={product.id}>Agregar al carrito</button>
+    <button class="add-to-cart small-section black-minimalist-button" data-product-id={product.id}>+</button>
 </article>

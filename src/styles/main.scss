@@ -1,3 +1,5 @@
+@use 'colors';
+
 //======================================================================
 // PROPIEDADES HTML BASE
 //======================================================================
@@ -7,6 +9,15 @@ body {
     padding: 0;
     background-color: black;
     color: white;
+}
+
+a{
+    text-decoration: none;
+    color: inherit;
+}
+
+button{
+    cursor: pointer;
 }
 
 //======================================================================
@@ -174,18 +185,57 @@ body {
     @include margin-x-small();
 }
 
+//Header
+//----------------------------------------------------------------------------------
+.header{
+    @include flex-x-center();
+    align-items: stretch;
+    height: 10vh;
+    gap: 10px;
+    background-color: colors.$dark-grey;
+
+    img{
+        max-width: 20dvw;
+        max-height: 8vh;
+    }
+
+    nav{
+        @include flex-x-center();
+        align-items: stretch;
+        height: 100%;
+
+        a{
+            @include flex-x-center();
+            align-items: stretch;
+            gap: 8px;
+            height: 100%;
+
+            p{
+                @include flex-x-center();
+                margin: 0;
+                height: 100%;
+            }
+        }
+    }
+}
+
 //Productos
 //----------------------------------------------------------------------------------
 .products-container {
     @include section-base();
     @include flex-y-center();
+    align-items: stretch;
+
+    h2{
+        border-bottom: 5px solid white;
+    }
 
     .products-grid{
         @include flex-x-center();
         flex-wrap: wrap;
-        gap: 20px;
-        justify-content: center;
         width: 100%;
+        justify-content: center;
+        gap: 20px;
     }
 }
 
@@ -195,18 +245,17 @@ body {
     flex-basis: 20%;
     border-style: solid;
     border-color: white;
-    border-width: 2px;
-    border-radius: 8px;
+    border-width: 1px;
     height: 30vh;
     text-align: center;
     overflow: hidden;
 
     .big-section{
-        height: 90%;
+        height: 85%;
     }
 
     .small-section{
-        height: 10%;
+        height: 15%;
     }
 
     img{
@@ -243,7 +292,7 @@ body {
             @include section-base();
             @include flex-y-center();
             align-items: stretch;
-            background-color: rgb(10, 10, 10);
+            background-color: colors.$dark-grey;
             gap: 10px;
             padding: 10px;
 
@@ -291,7 +340,17 @@ body {
             width: 0;
             height: 0;
         }
-    }
+    } 
+}
 
-    
+//Generico
+//-------------------------------------------------------------------------------
+.black-minimalist-button{
+    @include flex-x-center();
+    @include bold-text();
+    background-color: black;
+    color: white;
+    border: 1px white solid;
+    border-radius: 0;
+    font-size: 2rem;
 }
