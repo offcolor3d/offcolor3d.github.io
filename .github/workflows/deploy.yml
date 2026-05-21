@@ -47,6 +47,10 @@ jobs:
         run: npm run build
         working-directory: ${{ env.BUILD_PATH }}
 
+        # Asume la variable de entorno secreta del repo para construir urls.
+        env:
+          PUBLIC_API_BASE_URL: ${{ secrets.PUBLIC_API_BASE_URL }}
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
